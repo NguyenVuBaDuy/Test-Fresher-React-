@@ -145,7 +145,7 @@ const RegisterPage = () => {
                                 </div>
                             </Form.Item>
                             <Divider />
-                            <div className="ifHadAccount">Do you already have an account? <Link to={"/login"}>Login here</Link></div>
+                            <div className="ifHadAccount">Already have an account? <Link to={"/login"}>Login here</Link></div>
                         </Form>
                     </fieldset >
                 </Col>

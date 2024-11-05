@@ -1,29 +1,29 @@
  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
- .register-page {
+ .login-page {
 
      display: flex;
      width: 100vw;
      height: 100vh;
-     background-image: url(./images/pexels-photo-1372971-Recovered.jpg);
+     background-image: url(../register/images/pexels-photo-1372971-Recovered.jpg);
      background-size: cover;
      background-repeat: no-repeat;
      background-position: 50% 100%;
  }
 
- .register-page .row {
+ .login-page .row {
      width: 100%;
      display: flex;
      justify-content: center;
      align-items: center;
  }
 
- .register-page h2 {
+ .login-page h2 {
      font-family: "Montserrat", sans-serif;
      font-size: 50px;
  }
 
- .register-page fieldset {
+ .login-page fieldset {
      padding: 20px;
      margin: 5px;
      border: 2px solid #ccc;
@@ -31,7 +31,7 @@
      background-color: rgba(255, 255, 255, 0.9);
  }
 
- .register-page .input {
+ .login-page .input {
      width: 100%;
      padding: 10px;
      font-size: 16px;
@@ -40,21 +40,21 @@
      outline: none;
  }
 
- .register-page input::placeholder {
+ .login-page input::placeholder {
      color: #aaa;
      font-style: italic;
  }
 
- .register-page label {
+ .login-page label {
      font-family: "Montserrat", sans-serif;
      font-weight: 400;
  }
 
- .register-page .ifHadAccount {
+ .login-page .ifHadAccount {
      font-family: "Montserrat", sans-serif;
  }
 
- .register-page input:hover {
+ .login-page input:hover {
      border-color: #4096ff;
      border-inline-end-width: 1px;
      z-index: 1;
