@@ -1,20 +1,38 @@
-import { Button, Col, Divider, Form, Input, Row } from "antd"
+import { Button, Col, Divider, Form, Input, message, notification, Row } from "antd"
 import { useForm } from "antd/es/form/Form"
 import "./register.css"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import { registerAPI } from "../../services/api.service"
 
 const RegisterPage = () => {
 
     const [form] = useForm()
 
+    const navigate = useNavigate()
+
+    const [loading, setLoading] = useState(false)
+
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
     const phoneRef = useRef(null)
 
-    const handleRegisterUser = (values) => {
-        console.log(values)
+    const handleRegisterUser = async (values) => {
+        setLoading(true)
+        const { fullName, email, password, phone } = values
+        const res = await registerAPI(fullName, email, password, phone)
+        if (res.data) {
+            message.success("Account registration successful")
+            form.resetFields()
+            navigate("/")
+        } else {
+            notification.error({
+                message: "Account registration failed",
+                description: JSON.stringify(res.message)
+            })
+        }
+        setLoading(false)
     }
 
     const handleOnKeyDown = (event, nextRef) => {
@@ -121,6 +139,7 @@ const RegisterPage = () => {
                                     <Button
                                         type="primary"
                                         onClick={() => form.submit()}
+                                        loading={loading}
                                     >
                                         Register </Button>
                                 </div>
