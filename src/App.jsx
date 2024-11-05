@@ -4,12 +4,13 @@ import {
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import LoginPage from './pages/login';
-import ContactPage from './pages/contact';
-import BookPage from './pages/book';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import HomePage from './components/Home';
+import LoginPage from './pages/login/login';
+import ContactPage from './pages/contact/contact';
+import BookPage from './pages/book/book';
+import Footer from './components/Footer/footer';
+import Header from './components/Header/header';
+import HomePage from './components/Home/home';
+import RegisterPage from './pages/register/register';
 
 
 
@@ -50,6 +51,10 @@ export default function App() {
     {
       path: "/login",
       element: <LoginPage />,
+    },
+    {
+      path: "/register",
+      element: <RegisterPage />,
     },
   ]);
 
