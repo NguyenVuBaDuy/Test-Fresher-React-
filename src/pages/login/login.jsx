@@ -1,17 +1,22 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-import { Button, Col, Divider, Form, Input, Row } from "antd"
+import { Button, Col, Divider, Form, Input, message, notification, Row } from "antd"
 import { useForm } from "antd/es/form/Form"
 import { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import './login.css'
+import { loginAPI } from "../../services/api.service"
+import { useDispatch } from "react-redux"
+import { doLoginAction } from "../../redux/account/accountSlice"
 
 const LoginPage = () => {
 
     const [form] = useForm()
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     const passwordRef = useRef(null)
 
+    const dispatch = useDispatch()
 
     const handleOnKeyDown = (event, nextRef) => {
         if (event.key === "Enter") {
@@ -24,6 +29,24 @@ const LoginPage = () => {
         }
     }
 
+    const handleLogin = async (values) => {
+        setLoading(true)
+        const res = await loginAPI(values.email, values.password)
+        if (res.data) {
+            localStorage.setItem("access_token", res.data.access_token)
+            dispatch(doLoginAction(res.data.user))
+            message.success('Login successfully')
+            form.resetFields()
+            navigate("/")
+        } else {
+            notification.error({
+                message: "Login failed",
+                description: JSON.stringify(res.message)
+            })
+        }
+        setLoading(false)
+    }
+
     return (
         <>
             <div className="login-page" >
@@ -34,7 +57,7 @@ const LoginPage = () => {
                             <Form
                                 autoComplete="off"
                                 form={form}
-                                onFinish={(values) => { }}
+                                onFinish={(values) => { handleLogin(values) }}
                                 layout="vertical"
                             >
 

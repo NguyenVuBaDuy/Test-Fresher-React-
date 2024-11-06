@@ -25,7 +25,7 @@ const RegisterPage = () => {
         if (res.data) {
             message.success("Account registration successful")
             form.resetFields()
-            navigate("/")
+            navigate("/login")
         } else {
             notification.error({
                 message: "Account registration failed",
