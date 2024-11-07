@@ -12,8 +12,12 @@ import Header from './components/Header/header';
 import HomePage from './components/Home/home';
 import RegisterPage from './pages/register/register';
 import { fetchUserAPI } from './services/api.service';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { doGetAccountAction } from './redux/account/accountSlice';
+import Loading from './components/Loading/loading';
+import ErrorPage from './pages/error/error';
+import AdminPage from './pages/admin/admin';
+import PrivateRoute from './components/PrivateRoute/private.route';
 
 
 
@@ -28,11 +32,31 @@ const Layout = () => {
   )
 }
 
-export default function App() {
+const LayoutAdmin = () => {
+  const isAdminRoute = window.location.pathname.startsWith('/admin')
+  const user = useSelector(state => state.account.user)
+  const userRole = user.role
+  return (
+    <div className='layout-app'>
+      {isAdminRoute && userRole === 'ADMIN' && <Header />}
+      <Outlet />
+      {isAdminRoute && userRole === 'ADMIN' && <Footer />}
+    </div>
+  )
+}
+
+const App = () => {
 
   const dispatch = useDispatch();
 
+  const isAuthenticated = useSelector(state => state.account.isAuthenticated)
+
   const getAccount = async () => {
+    if (window.location.pathname === '/login'
+      || window.location.pathname === '/register'
+    ) {
+      return
+    }
     const res = await fetchUserAPI()
     if (res && res.data) {
       dispatch(doGetAccountAction(res.data))
@@ -47,7 +71,7 @@ export default function App() {
     {
       path: "/",
       element: <Layout />,
-      errorElement: "404 NOT FOUND",
+      errorElement: <ErrorPage />,
       children: [
         {
           index: true,
@@ -55,6 +79,25 @@ export default function App() {
         },
         {
           path: "contact",
+          element: <ContactPage />
+        },
+        {
+          path: "book",
+          element: <BookPage />
+        }
+      ]
+    },
+    {
+      path: "/admin",
+      element: <LayoutAdmin />,
+      errorElement: <ErrorPage />,
+      children: [
+        {
+          index: true,
+          element: <PrivateRoute><AdminPage /></PrivateRoute>
+        },
+        {
+          path: "user",
           element: <ContactPage />
         },
         {
@@ -75,7 +118,18 @@ export default function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      {isAuthenticated === true
+        || window.location.pathname === '/login'
+        || window.location.pathname === '/register'
+        || window.location.pathname === '/'
+        ?
+        <RouterProvider router={router} />
+        :
+        <Loading />
+      }
     </>
   )
 }
+
+
+export default App

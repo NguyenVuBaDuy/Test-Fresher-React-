@@ -1,4 +1,5 @@
  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
  .register-page {
 
@@ -19,8 +20,8 @@
  }
 
  .register-page h2 {
-     font-family: "Montserrat", sans-serif;
-     font-size: 50px;
+     font-family: "Great Vibes", cursive;
+     font-size: 100px;
  }
 
  .register-page fieldset {
