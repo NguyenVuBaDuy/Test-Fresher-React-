@@ -34,7 +34,7 @@ const LoginPage = () => {
         const res = await loginAPI(values.email, values.password)
         if (res.data) {
             localStorage.setItem("access_token", res.data.access_token)
-            dispatch(doLoginAction(res.data.user))
+            dispatch(doLoginAction(res.data))
             message.success('Login successfully')
             form.resetFields()
             navigate("/")

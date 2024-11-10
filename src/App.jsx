@@ -18,6 +18,9 @@ import Loading from './components/Loading/loading';
 import ErrorPage from './pages/error/error';
 import AdminPage from './pages/admin/admin';
 import PrivateRoute from './components/PrivateRoute/private.route';
+import LayoutAdmin from './components/Admin/layout.admin';
+import UserPage from './pages/user/user';
+import OrderPage from './pages/order/order';
 
 
 
@@ -32,18 +35,18 @@ const Layout = () => {
   )
 }
 
-const LayoutAdmin = () => {
-  const isAdminRoute = window.location.pathname.startsWith('/admin')
-  const user = useSelector(state => state.account.user)
-  const userRole = user.role
-  return (
-    <div className='layout-app'>
-      {isAdminRoute && userRole === 'ADMIN' && <Header />}
-      <Outlet />
-      {isAdminRoute && userRole === 'ADMIN' && <Footer />}
-    </div>
-  )
-}
+// const LayoutAdmin = () => {
+//   const isAdminRoute = window.location.pathname.startsWith('/admin')
+//   const user = useSelector(state => state.account.user)
+//   const userRole = user.role
+//   return (
+//     <div className='layout-app'>
+//       {isAdminRoute && userRole === 'ADMIN' && <HeaderAdmin />}
+//       <Outlet />
+//       {isAdminRoute && userRole === 'ADMIN' && <Footer />}
+//     </div>
+//   )
+// }
 
 const App = () => {
 
@@ -97,12 +100,16 @@ const App = () => {
           element: <PrivateRoute><AdminPage /></PrivateRoute>
         },
         {
-          path: "user",
-          element: <ContactPage />
+          path: "/admin/user",
+          element: <UserPage />
         },
         {
-          path: "book",
+          path: "/admin/book",
           element: <BookPage />
+        },
+        {
+          path: "/admin/order",
+          element: <OrderPage />
         }
       ]
     },

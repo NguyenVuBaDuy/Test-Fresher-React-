@@ -7,7 +7,7 @@ const ErrorPage = () => {
     return (
         <Result
             status="404"
-            title="404"
+            title="404 ne"
             subTitle="Sorry, the page you visited does not exist."
             extra={<Button type="primary"><Link to={'/'}><ArrowLeftOutlined /> Back Home</Link></Button>}
         />
