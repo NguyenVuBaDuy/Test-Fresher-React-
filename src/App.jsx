@@ -21,8 +21,7 @@ import PrivateRoute from './components/PrivateRoute/private.route';
 import LayoutAdmin from './components/Admin/layout.admin';
 import UserPage from './pages/user/user';
 import OrderPage from './pages/order/order';
-
-
+import './styles/reset.scss';
 
 
 const Layout = () => {
