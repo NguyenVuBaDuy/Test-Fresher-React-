@@ -31,10 +31,15 @@ const logOutAPI = () => {
     return axios.post(URL_BACKEND)
 }
 
+const fetchUserWithPaginationAPI = (current, pageSize) => {
+    const URL_BACKEND = `/api/v1/user?current=${current}&pageSize=${pageSize}`
+    return axios.get(URL_BACKEND)
+}
 
 export {
     registerAPI,
     loginAPI,
     fetchUserAPI,
-    logOutAPI
+    logOutAPI,
+    fetchUserWithPaginationAPI
 }

@@ -11,7 +11,6 @@ const handleRefreshToken = async () => {
     const URL_BACKEND = '/api/v1/auth/refresh'
     const res = await instance.get(URL_BACKEND)
     if (res && res.data) {
-        console.log(">>>check access token", res.data.access_token)
         return res.data.access_token
     } else return null
 }
