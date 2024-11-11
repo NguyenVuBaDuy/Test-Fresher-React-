@@ -1,20 +1,33 @@
 import { DownOutlined, HomeOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons';
 import './header.scss'
-import { Badge, Divider, Drawer, Dropdown, Input, Space } from 'antd'
+import { Badge, Divider, Drawer, Dropdown, Input, message, Space } from 'antd'
 import { FiShoppingCart } from 'react-icons/fi';
 import { FaReact } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logOutAPI } from '../../services/api.service';
+import { doLogoutAction } from '../../redux/account/accountSlice';
 
 
 const Header = () => {
 
     const [openDrawer, setOpenDrawer] = useState(false);
+
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
+    const dispatch = useDispatch()
+
     const navigate = useNavigate();
 
+    const handleLogOut = async () => {
+        const res = await logOutAPI()
+        if (res.data) {
+            message.success('Logout Successfully')
+            dispatch(doLogoutAction())
+            navigate('/')
+        }
+    }
 
     const items = [
         {
@@ -22,7 +35,8 @@ const Header = () => {
             key: 'account',
         },
         {
-            label: <label >Log out</label>,
+            label: <div onClick={() => { handleLogOut() }} style={{ width: "100%" }}>
+                <label style={{ cursor: "pointer" }}>Log out</label></div>,
             key: 'logout',
         },
 
