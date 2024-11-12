@@ -118,8 +118,8 @@ const LayoutAdmin = () => {
                             margin: '24px 16px',
                             padding: 24,
                             minHeight: 280,
-                            background: colorBgContainer,
                             borderRadius: borderRadiusLG,
+                            backgroundColor: "#F5F5F5"
                         }}
                     >
                         <Outlet />

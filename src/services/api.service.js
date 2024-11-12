@@ -31,8 +31,8 @@ const logOutAPI = () => {
     return axios.post(URL_BACKEND)
 }
 
-const fetchUserWithPaginationAPI = (current, pageSize) => {
-    const URL_BACKEND = `/api/v1/user?current=${current}&pageSize=${pageSize}`
+const fetchUserWithPaginationAPI = (current, pageSize, query) => {
+    const URL_BACKEND = `/api/v1/user?current=${current}&pageSize=${pageSize}${query ? query : ""}`
     return axios.get(URL_BACKEND)
 }
 
