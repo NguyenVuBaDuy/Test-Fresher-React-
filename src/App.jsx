@@ -18,7 +18,7 @@ import Loading from './components/Loading/loading';
 import ErrorPage from './pages/error/error';
 import AdminPage from './pages/admin/admin';
 import PrivateRoute from './components/PrivateRoute/private.route';
-import LayoutAdmin from './components/Admin/layout.admin';
+import LayoutAdmin from './components/Admin/User/layout.admin';
 import UserPage from './pages/user/user';
 import OrderPage from './pages/order/order';
 import './styles/reset.scss';

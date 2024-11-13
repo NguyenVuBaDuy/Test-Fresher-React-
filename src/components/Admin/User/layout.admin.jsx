@@ -13,8 +13,8 @@ import { Button, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
 import { FaUserGroup, FaBook } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logOutAPI } from '../../services/api.service';
-import { doLogoutAction } from '../../redux/account/accountSlice';
+import { logOutAPI } from '../../../services/api.service';
+import { doLogoutAction } from '../../../redux/account/accountSlice';
 const { Header, Content, Sider } = Layout;
 
 
