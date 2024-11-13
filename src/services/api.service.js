@@ -36,10 +36,19 @@ const fetchUserWithPaginationAPI = (current, pageSize, query, sortQuery) => {
     return axios.get(URL_BACKEND)
 }
 
+const createUserAPI = (fullName, password, email, phone) => {
+    const URL_BACKEND = '/api/v1/user'
+    const data = {
+        fullName, password, email, phone
+    }
+    return axios.post(URL_BACKEND, data)
+}
+
 export {
     registerAPI,
     loginAPI,
     fetchUserAPI,
     logOutAPI,
-    fetchUserWithPaginationAPI
+    fetchUserWithPaginationAPI,
+    createUserAPI
 }

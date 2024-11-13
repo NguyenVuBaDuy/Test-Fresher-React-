@@ -4,6 +4,9 @@ import { DeleteOutlined, ExportOutlined, ImportOutlined, ReloadOutlined, UserAdd
 import { fetchUserWithPaginationAPI } from '../../../services/api.service';
 import InputFilterUser from './input.filter.user';
 import ViewUserDetail from './view.user.detail';
+import CreateUser from './create.user';
+import { render } from 'react-dom';
+import moment from 'moment';
 
 
 
@@ -23,6 +26,7 @@ const UserTable = () => {
     const [isViewUserDetail, setIsViewUserDetail] = useState(false)
     const [dataViewUserDetail, setDataViewUserDetail] = useState('')
 
+    const [isCreateUserModal, setIsCreateUserModal] = useState(false)
 
     useEffect(() => {
         loadUser()
@@ -43,17 +47,25 @@ const UserTable = () => {
         {
             title: 'Full name',
             dataIndex: 'fullName',
-            sorter: true
+            sorter: true,
         },
         {
             title: 'Email',
             dataIndex: 'email',
-            sorter: true
+            sorter: true,
         },
         {
             title: 'Phone number',
             dataIndex: 'phone',
-            sorter: true
+            sorter: true,
+        },
+        {
+            title: 'Last Updated',
+            dataIndex: 'updatedAt',
+            sorter: true,
+            render: (_, record) => (
+                <div>{moment(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</div>
+            ),
         },
         {
             title: 'Action',
@@ -110,6 +122,7 @@ const UserTable = () => {
     }
 
     const renderHeaderTable = () => {
+
         return (
             <div style={{
                 display: "flex",
@@ -120,12 +133,16 @@ const UserTable = () => {
                 <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
                     <Button type='primary' ><ExportOutlined /> Export</Button>
                     <Button type='primary' ><ImportOutlined /> Import</Button>
-                    <Button type='primary' ><UserAddOutlined /> Add new</Button>
+                    <Button type='primary'
+                        onClick={() => { setIsCreateUserModal(true) }}
+                    ><UserAddOutlined /> Add new</Button>
                     <ReloadOutlined
                         style={{ cursor: "pointer" }}
                         onClick={() => {
                             setSortQuery('')
                             setQuery('')
+                            setCurrent(1)
+                            setPageSize(5)
                         }}
                     />
                 </div>
@@ -167,7 +184,13 @@ const UserTable = () => {
                 setIsViewUserDetail={setIsViewUserDetail}
                 dataViewUserDetail={dataViewUserDetail}
                 setDataViewUserDetail={setDataViewUserDetail} />
+
+            <CreateUser
+                setIsCreateUserModal={setIsCreateUserModal}
+                isCreateUserModal={isCreateUserModal}
+                loadUser={loadUser} />
         </>
     )
 }
 export default UserTable;
+
