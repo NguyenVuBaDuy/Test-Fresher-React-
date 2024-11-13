@@ -109,6 +109,29 @@ const UserTable = () => {
         }
     }
 
+    const renderHeaderTable = () => {
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+
+            }} >
+                <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Users</div>
+                <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
+                    <Button type='primary' ><ExportOutlined /> Export</Button>
+                    <Button type='primary' ><ImportOutlined /> Import</Button>
+                    <Button type='primary' ><UserAddOutlined /> Add new</Button>
+                    <ReloadOutlined
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                            setSortQuery('')
+                            setQuery('')
+                        }}
+                    />
+                </div>
+            </div >
+        )
+    }
 
     return (
         <>
@@ -122,29 +145,8 @@ const UserTable = () => {
                 </Col>
 
                 <Col span={24}>
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        backgroundColor: "white",
-                        padding: "20px 25px",
-                        borderTopLeftRadius: "8px",
-                        borderTopRightRadius: "8px"
-                    }}>
-                        <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Users</div>
-                        <div>
-                            <Button type='primary' style={{ marginRight: "15px" }}><ExportOutlined /> Export</Button>
-                            <Button type='primary' style={{ marginRight: "15px" }}><ImportOutlined /> Import</Button>
-                            <Button type='primary' style={{ marginRight: "25px" }}><UserAddOutlined /> Add new</Button>
-                            <ReloadOutlined
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                    setSortQuery('')
-                                    setQuery('')
-                                }}
-                            />
-                        </div>
-                    </div>
                     <Table
+                        title={renderHeaderTable}
                         columns={columns}
                         dataSource={dataUsers}
                         rowKey={"_id"}

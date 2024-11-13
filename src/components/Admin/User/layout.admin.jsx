@@ -9,7 +9,7 @@ import {
     UserOutlined,
     WindowsOutlined,
 } from '@ant-design/icons';
-import { Button, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
+import { Avatar, Button, Dropdown, Layout, Menu, message, Space, theme } from 'antd';
 import { FaUserGroup, FaBook } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,8 +56,19 @@ const LayoutAdmin = () => {
     ];
 
     const itemsAccount = [
-        getItem(<div onClick={() => { handleLogOut() }} style={{ width: "100%" }}>
-            <label style={{ cursor: "pointer" }}>Log out</label></div>, "logout"),
+        getItem(<div style={{ width: "100%" }}>
+            <label style={{ cursor: "pointer" }}>Account management</label>
+        </div>, "manage"),
+
+        getItem(<div style={{ width: "100%" }} onClick={() => { navigate('/') }}>
+            <label style={{ cursor: "pointer" }}>Home page</label>
+        </div>, "homePage"),
+
+        getItem(<div
+            onClick={() => { handleLogOut() }}
+            style={{ width: "100%" }}>
+            <label style={{ cursor: "pointer" }}>Log out</label>
+        </div>, "logout"),
     ]
 
     const {
@@ -107,7 +118,7 @@ const LayoutAdmin = () => {
                         <Dropdown menu={{ items: itemsAccount }} trigger={['hover']} placement="bottomRight">
                             <a onClick={(e) => e.preventDefault()}>
                                 <Space style={{ marginRight: "15px" }}>
-                                    <SmileOutlined />Welcome {user.fullName}
+                                    <Avatar size='large' src={`${import.meta.env.VITE_URL_BACKEND}/images/avatar/${user.avatar}`} />{user.fullName}
                                     <DownOutlined />
                                 </Space>
                             </a>

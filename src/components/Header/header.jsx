@@ -1,6 +1,6 @@
 import { DownOutlined, HomeOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons';
 import './header.scss'
-import { Badge, Divider, Drawer, Dropdown, Input, message, Space } from 'antd'
+import { Avatar, Badge, Divider, Drawer, Dropdown, Input, message, Space } from 'antd'
 import { FiShoppingCart } from 'react-icons/fi';
 import { FaReact } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -30,8 +30,13 @@ const Header = () => {
     }
 
     const items = [
+        ...(user.role === 'ADMIN' ? [{
+            label: <div onClick={() => { navigate('/admin') }} style={{ width: "100%" }}>
+                <label style={{ cursor: "pointer" }}>Admin Dashboard</label></div>,
+            key: 'admin',
+        }] : []),
         {
-            label: <label>Account information</label>,
+            label: <label style={{ cursor: "pointer" }}>Account management</label>,
             key: 'account',
         },
         {
@@ -74,7 +79,7 @@ const Header = () => {
                                     <Dropdown menu={{ items }} trigger={['hover']} placement="bottomRight">
                                         <a onClick={(e) => e.preventDefault()}>
                                             <Space>
-                                                <SmileOutlined />{user.fullName}
+                                                <Avatar size={35} src={`${import.meta.env.VITE_URL_BACKEND}/images/avatar/${user.avatar}`} />{user.fullName}
                                                 <DownOutlined />
                                             </Space>
                                         </a>

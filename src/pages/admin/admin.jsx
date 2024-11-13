@@ -8,7 +8,7 @@ import UserTable from '../../components/Admin/User/user.table';
 const AdminPage = () => {
 
     return (
-        <UserTable />
+        <div>Admin Dashboard</div>
     )
 }
 export default AdminPage;
