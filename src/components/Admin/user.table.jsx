@@ -12,17 +12,17 @@ const columns = [
     {
         title: 'Full name',
         dataIndex: 'fullName',
-        sorter: (a, b) => a.fullName.length - b.fullName.length,
+        sorter: true
     },
     {
         title: 'Email',
-        dataIndex: 'email'
+        dataIndex: 'email',
+        sorter: true
     },
     {
         title: 'Phone number',
         dataIndex: 'phone',
-        // defaultSortOrder: 'descend',
-        sorter: (a, b) => a.phone - b.phone
+        sorter: true
     },
     {
         title: 'Action',
@@ -52,14 +52,15 @@ const UserTable = () => {
     const [total, setTotal] = useState(10)
 
     const [query, setQuery] = useState(null);
+    const [sortQuery, setSortQuery] = useState(null)
 
     useEffect(() => {
         loadUser()
-    }, [current, pageSize, query])
+    }, [current, pageSize, query, sortQuery])
 
     const loadUser = async () => {
 
-        const res = await fetchUserWithPaginationAPI(current, pageSize, query)
+        const res = await fetchUserWithPaginationAPI(current, pageSize, query, sortQuery)
         if (res.data) {
             setDataUsers(res.data.result)
             setCurrent(+res.data.meta.current)
@@ -68,7 +69,7 @@ const UserTable = () => {
         }
     }
 
-    const handleOnChange = (pagination) => {
+    const handleOnChange = (pagination, filters, sorter, extra) => {
         if (pagination && pagination.current) {
             if (+current != +pagination.current) {
                 setCurrent(+pagination.current)
@@ -80,6 +81,18 @@ const UserTable = () => {
                 setPageSize(+pagination.pageSize)
             }
         }
+
+        if (sorter && sorter.field) {
+
+            let sort = ''
+
+            if (sorter.order === 'ascend') {
+                sort = `&sort=${sorter.field}`
+            } else if (sorter.order === 'descend') {
+                sort = `&sort=-${sorter.field}`
+            }
+            setSortQuery(sort)
+        }
     }
 
 
@@ -89,7 +102,8 @@ const UserTable = () => {
                 <InputFilterUser
                     setQuery={setQuery}
                     setCurrent={setCurrent}
-                    setPageSize={setPageSize} />
+                    setPageSize={setPageSize}
+                    setSortQuery={setSortQuery} />
             </Col>
 
             <Col span={24}>
@@ -106,7 +120,13 @@ const UserTable = () => {
                         <Button type='primary' style={{ marginRight: "15px" }}><ExportOutlined /> Export</Button>
                         <Button type='primary' style={{ marginRight: "15px" }}><ImportOutlined /> Import</Button>
                         <Button type='primary' style={{ marginRight: "25px" }}><UserAddOutlined /> Add new</Button>
-                        <ReloadOutlined style={{ cursor: "pointer" }} />
+                        <ReloadOutlined
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                                setSortQuery('')
+                                setQuery('')
+                            }}
+                        />
                     </div>
                 </div>
                 <Table

@@ -4,7 +4,7 @@ import { useForm } from "antd/es/form/Form"
 const InputFilterUser = (props) => {
     const [form] = useForm()
 
-    const { setQuery, setCurrent, setPageSize } = props
+    const { setQuery, setCurrent, setPageSize, setSortQuery } = props
 
     const handleSearch = async (values) => {
 
@@ -81,6 +81,7 @@ const InputFilterUser = (props) => {
                         setCurrent(1)
                         setPageSize(5)
                         setQuery('')
+                        setSortQuery('')
                         form.resetFields()
                     }}
                 >Clear</Button>
