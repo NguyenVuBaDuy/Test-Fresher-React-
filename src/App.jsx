@@ -41,12 +41,13 @@ const App = () => {
 
   const isLoading = useSelector(state => state.account.isLoading)
 
+
   const getAccount = async () => {
+
     if (window.location.pathname === '/login'
       || window.location.pathname === '/register'
-    ) {
-      return
-    }
+    ) return
+
     const res = await fetchUserAPI()
     if (res && res.data) {
       dispatch(doGetAccountAction(res.data))

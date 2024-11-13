@@ -69,7 +69,7 @@ const Header = () => {
                             </li>
                             <li className="navigation__item mobile hover">
                                 {!isAuthenticated ?
-                                    <span onClick={() => navigate('/login')}> <SmileOutlined />  Account</span>
+                                    <span onClick={() => { navigate('/login') }}> <SmileOutlined />  Account</span>
                                     :
                                     <Dropdown menu={{ items }} trigger={['hover']} placement="bottomRight">
                                         <a onClick={(e) => e.preventDefault()}>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_URL_BACKEND,
@@ -14,6 +15,7 @@ const handleRefreshToken = async () => {
         return res.data.access_token
     } else return null
 }
+
 
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
@@ -36,6 +38,12 @@ instance.interceptors.response.use(function (response) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
 
+    const isAuth = localStorage.getItem('access_token')
+
+    if (!isAuth) {
+        return Promise.reject(error);
+    }
+
     if (error.config && error.response
         && +error.response.status === 401
         && !error.config.headers[NO_RETRY_HEADER]
@@ -49,6 +57,7 @@ instance.interceptors.response.use(function (response) {
             return instance.request(error.config);
         }
     }
+
 
     if (error.config && error.response
         && +error.response.status === 400
