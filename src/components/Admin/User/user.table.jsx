@@ -7,6 +7,7 @@ import ViewUserDetail from './view.user.detail';
 import CreateUser from './create.user';
 import { render } from 'react-dom';
 import moment from 'moment';
+import ImportUser from './import.file.user';
 
 
 
@@ -27,6 +28,8 @@ const UserTable = () => {
     const [dataViewUserDetail, setDataViewUserDetail] = useState('')
 
     const [isCreateUserModal, setIsCreateUserModal] = useState(false)
+
+    const [isImportDataUser, setIsImportDataUser] = useState(false)
 
     useEffect(() => {
         loadUser()
@@ -132,7 +135,11 @@ const UserTable = () => {
                 <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Users</div>
                 <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
                     <Button type='primary' ><ExportOutlined /> Export</Button>
-                    <Button type='primary' ><ImportOutlined /> Import</Button>
+
+                    <Button type='primary'
+                        onClick={() => { setIsImportDataUser(true) }}
+                    ><ImportOutlined /> Import</Button>
+
                     <Button type='primary'
                         onClick={() => { setIsCreateUserModal(true) }}
                     ><UserAddOutlined /> Add new</Button>
@@ -189,6 +196,10 @@ const UserTable = () => {
                 setIsCreateUserModal={setIsCreateUserModal}
                 isCreateUserModal={isCreateUserModal}
                 loadUser={loadUser} />
+
+            <ImportUser
+                setIsImportDataUser={setIsImportDataUser}
+                isImportDataUser={isImportDataUser} />
         </>
     )
 }
