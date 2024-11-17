@@ -5,10 +5,9 @@ import { fetchUserWithPaginationAPI } from '../../../services/api.service';
 import InputFilterUser from './input.filter.user';
 import ViewUserDetail from './view.user.detail';
 import CreateUser from './create.user';
-import { render } from 'react-dom';
 import moment from 'moment';
-import ImportUser from './import.file.user';
-
+import ImportUser from './data/import.file.user';
+import * as XLSX from 'xlsx';
 
 
 
@@ -124,6 +123,15 @@ const UserTable = () => {
         }
     }
 
+    const handleExport = () => {
+        if (dataUsers && dataUsers.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(dataUsers);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "ExportUser.xlsx");
+        }
+    }
+
     const renderHeaderTable = () => {
 
         return (
@@ -134,7 +142,8 @@ const UserTable = () => {
             }} >
                 <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Users</div>
                 <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
-                    <Button type='primary' ><ExportOutlined /> Export</Button>
+                    <Button type='primary'
+                        onClick={() => { handleExport() }}><ExportOutlined /> Export</Button>
 
                     <Button type='primary'
                         onClick={() => { setIsImportDataUser(true) }}

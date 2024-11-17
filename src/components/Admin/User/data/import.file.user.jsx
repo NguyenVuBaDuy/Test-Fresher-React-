@@ -3,8 +3,8 @@ import { message, Modal, notification, Table } from "antd";
 import Dragger from "antd/es/upload/Dragger"
 import { useState } from "react";
 import * as XLSX from 'xlsx'
-import { importDataUserAPI } from "../../../services/api.service";
-
+import { importDataUserAPI } from "../../../../services/api.service";
+import templateFile from './template.xlsx?url'
 
 const dummyRequest = ({ file, onSuccess }) => {
     setTimeout(() => {
@@ -122,8 +122,8 @@ const ImportUser = (props) => {
                 </p>
                 <p className="ant-upload-text">Click or drag file to this area to upload</p>
                 <p className="ant-upload-hint">
-                    Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                    banned files.
+                    Support for a single upload.
+                    Only accept .csv, .xls, .xlsx . or <a href={templateFile} download onClick={event => event.stopPropagation()}>Download Sample File</a>
                 </p>
             </Dragger>
             <div style={{ paddingTop: 20 }}>
