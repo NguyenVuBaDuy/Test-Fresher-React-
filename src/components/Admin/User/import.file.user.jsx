@@ -1,9 +1,9 @@
 import { InboxOutlined } from "@ant-design/icons";
-import { message, Modal, Table } from "antd";
+import { message, Modal, notification, Table } from "antd";
 import Dragger from "antd/es/upload/Dragger"
 import { useState } from "react";
-import { render } from "react-dom";
 import * as XLSX from 'xlsx'
+import { importDataUserAPI } from "../../../services/api.service";
 
 
 const dummyRequest = ({ file, onSuccess }) => {
@@ -16,9 +16,10 @@ const dummyRequest = ({ file, onSuccess }) => {
 
 const ImportUser = (props) => {
 
-    const { isImportDataUser, setIsImportDataUser } = props
+    const { isImportDataUser, setIsImportDataUser, loadUser } = props
 
     const [dataExcel, setDataExcel] = useState([])
+    const [fileList, setFileList] = useState([])
 
     const propsUpload = {
         name: 'file',
@@ -27,19 +28,22 @@ const ImportUser = (props) => {
         accept: ".csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",//accept these files type
 
         // action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',->don't need to upload because only need to read file
-        customRequest: dummyRequest,//fake call api
 
+        customRequest: dummyRequest,//fake call api
+        fileList: fileList,
         onChange(info) {
-            const { status } = info.file;
+            const { status } = info.file
+            setFileList(info.fileList)
+
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
+                console.log(info.file, info.fileList)
             }
             if (status === 'done') {
 
                 if (info.fileList && info.fileList.length > 0) {
                     const file = info.fileList[0].originFileObj
-                    const reader = new FileReader();
-                    reader.readAsArrayBuffer(file);
+                    const reader = new FileReader()
+                    reader.readAsArrayBuffer(file)
 
                     reader.onload = event => {
                         const data = new Uint8Array(event.target.result)
@@ -50,7 +54,12 @@ const ImportUser = (props) => {
                             range: 1
                         })
                         if (jsonData && jsonData.length) {
-                            setDataExcel(jsonData)
+
+                            const addDefaultPassword = jsonData.map(item => {
+                                return { ...item, 'password': "123456" }
+                            })
+
+                            setDataExcel(addDefaultPassword)
                         }
                     }
 
@@ -65,20 +74,49 @@ const ImportUser = (props) => {
         },
     };
 
+    const handleImportDataUser = async () => {
+        if (dataExcel.length) {
+            const res = await importDataUserAPI(dataExcel)
+            if (res.data) {
+                notification.success({
+                    description: `Success: ${res.data.countSuccess}, Error: ${res.data.countError}`,
+                    message: "Upload successfully",
+                })
+
+                await loadUser()
+                resetAndCloseModal()
+            } else {
+                notification.error({
+                    message: "Error import user",
+                    description: JSON.stringify(res.message)
+                })
+            }
+            resetAndCloseModal()
+        }
+    }
+
+    const resetAndCloseModal = () => {
+        setIsImportDataUser(false)
+        setDataExcel([])
+        setFileList([])
+    }
+
     return (
         <Modal
             title="Upload file"
             open={isImportDataUser}
-            onOk={() => { }}
-            onCancel={() => { setIsImportDataUser(false) }}
+            onOk={() => { handleImportDataUser() }}
+            onCancel={() => { resetAndCloseModal() }}
             centered
             okButtonProps={{
-                disabled: true
+                disabled: !dataExcel || dataExcel.length === 0
             }}
             maskClosable={false}
             okText="Import data"
-            width={'40vw'}>
-            <Dragger {...propsUpload}>
+            width={'40vw'} >
+            <Dragger
+                {...propsUpload}
+            >
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>
@@ -108,7 +146,7 @@ const ImportUser = (props) => {
                     ]}
                 />
             </div>
-        </Modal>
+        </Modal >
 
     )
 }

@@ -44,11 +44,17 @@ const createUserAPI = (fullName, password, email, phone) => {
     return axios.post(URL_BACKEND, data)
 }
 
+const importDataUserAPI = (data) => {
+    const URL_BACKEND = '/api/v1/user/bulk-create'
+    return axios.post(URL_BACKEND, data)
+}
+
 export {
     registerAPI,
     loginAPI,
     fetchUserAPI,
     logOutAPI,
     fetchUserWithPaginationAPI,
-    createUserAPI
-}
+    createUserAPI,
+    importDataUserAPI
+} 

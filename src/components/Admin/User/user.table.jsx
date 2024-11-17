@@ -199,7 +199,8 @@ const UserTable = () => {
 
             <ImportUser
                 setIsImportDataUser={setIsImportDataUser}
-                isImportDataUser={isImportDataUser} />
+                isImportDataUser={isImportDataUser}
+                loadUser={loadUser} />
         </>
     )
 }
