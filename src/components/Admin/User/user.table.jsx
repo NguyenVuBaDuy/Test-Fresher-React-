@@ -3,7 +3,7 @@ import './css/index.css';
 import { Button, Col, Form, Input, InputNumber, message, notification, Popconfirm, Row, Table, Typography } from 'antd';
 import moment from 'moment';
 import { DeleteOutlined, EditOutlined, ExportOutlined, ImportOutlined, ReloadOutlined, UserAddOutlined } from '@ant-design/icons';
-import { fetchUserWithPaginationAPI, updateUserAPI } from '../../../services/api.service';
+import { deleteUserAPI, fetchUserWithPaginationAPI, updateUserAPI } from '../../../services/api.service';
 import InputFilterUser from './input.filter.user';
 import ViewUserDetail from './view.user.detail';
 import CreateUser from './create.user';
@@ -119,6 +119,19 @@ const UserTable = () => {
         }
     }
 
+    const handleDeleteUser = async (id, name) => {
+        const res = await deleteUserAPI(id);
+        if (res.data) {
+            message.success(`Delete ${name}`)
+            await loadUser()
+        } else {
+            notification.success({
+                message: "Error delete user",
+                description: JSON.stringify(res.message)
+            })
+        }
+    }
+
     const columns = [
         {
             title: 'Id',
@@ -192,7 +205,7 @@ const UserTable = () => {
                             <Popconfirm
                                 title="Delete the user"
                                 description="Are you sure to delete this user?"
-                                onConfirm={() => { }}
+                                onConfirm={() => { handleDeleteUser(record._id, record.fullName) }}
                                 onCancel={() => { }}
                                 okText="Yes"
                                 cancelText="No"
