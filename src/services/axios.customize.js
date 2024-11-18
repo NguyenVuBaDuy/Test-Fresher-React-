@@ -41,6 +41,7 @@ instance.interceptors.response.use(function (response) {
     const isAuth = localStorage.getItem('access_token')
 
     if (!isAuth) {
+        if (error.response && error.response.data) return error.response.data
         return Promise.reject(error);
     }
 

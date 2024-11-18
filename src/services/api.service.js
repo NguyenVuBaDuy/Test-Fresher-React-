@@ -49,6 +49,12 @@ const importDataUserAPI = (data) => {
     return axios.post(URL_BACKEND, data)
 }
 
+const updateUserAPI = (_id, fullName, phone) => {
+    const URL_BACKEND = '/api/v1/user'
+    const data = { _id, fullName, phone }
+    return axios.put(URL_BACKEND, data)
+}
+
 export {
     registerAPI,
     loginAPI,
@@ -56,5 +62,6 @@ export {
     logOutAPI,
     fetchUserWithPaginationAPI,
     createUserAPI,
-    importDataUserAPI
+    importDataUserAPI,
+    updateUserAPI
 } 
