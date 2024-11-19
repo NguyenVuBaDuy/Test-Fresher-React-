@@ -63,7 +63,9 @@ const UserTable = () => {
 
     const [isImportDataUser, setIsImportDataUser] = useState(false)
 
-    const [editingKey, setEditingKey] = useState('');
+    const [editingKey, setEditingKey] = useState('')
+
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         loadUser()
@@ -84,7 +86,7 @@ const UserTable = () => {
     };
 
     const loadUser = async () => {
-
+        setIsLoading(true)
         const res = await fetchUserWithPaginationAPI(current, pageSize, query, sortQuery)
         if (res.data) {
             setDataUsers(res.data.result)
@@ -92,6 +94,7 @@ const UserTable = () => {
             setPageSize(+res.data.meta.pageSize)
             setTotal(+res.data.meta.total)
         }
+        setIsLoading(false)
     }
 
     const save = async (id) => {
@@ -313,6 +316,7 @@ const UserTable = () => {
                                     cell: EditableCell,
                                 },
                             }}
+                            loading={isLoading}
                             bordered
                             dataSource={dataUsers}
                             columns={mergedColumns}
