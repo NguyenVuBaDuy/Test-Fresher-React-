@@ -1,9 +1,8 @@
+import BookTable from "../../components/Admin/Book/book.table"
 
 const BookPage = () => {
     return (
-        <div>
-            Book Page
-        </div>
+        <BookTable />
     )
 }
 

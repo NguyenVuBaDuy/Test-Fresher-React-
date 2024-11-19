@@ -151,21 +151,29 @@ const UserTable = () => {
             title: 'Full name',
             dataIndex: 'fullName',
             editable: true,
+            sorter: true,
+            sortOrder: sortQuery?.includes('fullName') ? (sortQuery.includes('-') ? 'descend' : 'ascend') : null,
         },
         {
             title: 'Email',
             dataIndex: 'email',
             editable: false,
+            sorter: true,
+            sortOrder: sortQuery?.includes('email') ? (sortQuery.includes('-') ? 'descend' : 'ascend') : null,
+
         },
         {
             title: 'Phone number',
             dataIndex: 'phone',
             editable: true,
+            sorter: true,
+            sortOrder: sortQuery?.includes('phone') ? (sortQuery.includes('-') ? 'descend' : 'ascend') : null,
         },
         {
             title: 'Last Updated',
             dataIndex: 'updatedAt',
             sorter: true,
+            sortOrder: sortQuery?.includes('updatedAt') ? (sortQuery.includes('-') ? 'descend' : 'ascend') : null,
             editable: false,
             render: (_, record) => (
                 <div>{moment(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</div>

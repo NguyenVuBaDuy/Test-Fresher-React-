@@ -60,6 +60,12 @@ const deleteUserAPI = (id) => {
     return axios.delete(URL_BACKEND)
 }
 
+const fetchBookWithPaginationAPI = (current, pageSize, query, sortQuery) => {
+    const URL_BACKEND = `/api/v1/book?current=${current}&pageSize=${pageSize}${query ? query : ""}${sortQuery ? sortQuery : ""}`
+    return axios.get(URL_BACKEND)
+}
+
+
 export {
     registerAPI,
     loginAPI,
@@ -69,5 +75,6 @@ export {
     createUserAPI,
     importDataUserAPI,
     updateUserAPI,
-    deleteUserAPI
+    deleteUserAPI,
+    fetchBookWithPaginationAPI
 } 
