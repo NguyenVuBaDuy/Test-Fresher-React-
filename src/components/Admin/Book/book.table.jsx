@@ -1,9 +1,10 @@
 import { DeleteOutlined, EditOutlined, ExportOutlined, ReloadOutlined, UserAddOutlined } from "@ant-design/icons"
 import { Button, Col, Popconfirm, Row, Table } from "antd"
 import { useEffect, useState } from "react";
-import InputFilterBook from "../../../pages/book/input.filter.book";
+import InputFilterBook from "./input.filter.book";
 import { fetchBookWithPaginationAPI } from "../../../services/api.service";
 import moment from "moment";
+import ViewBookDetail from "./view.book.detail";
 
 const BookTable = () => {
 
@@ -16,11 +17,21 @@ const BookTable = () => {
     const [query, setQuery] = useState('')
     const [sortQuery, setSortQuery] = useState('')
 
+    const [isViewBookDetail, setIsViewBookDetail] = useState('')
+    const [dataViewBookDetail, setDataViewBookDetail] = useState('')
+
     const columns = [
         {
             title: 'Id',
             dataIndex: '_id',
             key: 'id',
+            render: (_, record) => (
+                <a href="#"
+                    onClick={() => {
+                        setIsViewBookDetail(true)
+                        setDataViewBookDetail(record)
+                    }}>{record._id}</a>
+            )
         },
         {
             title: 'Book title',
@@ -140,7 +151,7 @@ const BookTable = () => {
                 justifyContent: "space-between",
 
             }} >
-                <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Users</div>
+                <div style={{ fontSize: "18px", fontWeight: "bold" }}>List Books</div>
                 <div style={{ display: "flex", gap: 15, alignItems: "center" }}>
                     <Button type='primary'
                         onClick={() => { handleExport() }}><ExportOutlined /> Export</Button>
@@ -193,6 +204,12 @@ const BookTable = () => {
                     />
                 </Col>
             </Row>
+
+            <ViewBookDetail
+                isViewBookDetail={isViewBookDetail}
+                setIsViewBookDetail={setIsViewBookDetail}
+                dataViewBookDetail={dataViewBookDetail}
+                setDataViewBookDetail={setDataViewBookDetail} />
         </>
     )
 }
