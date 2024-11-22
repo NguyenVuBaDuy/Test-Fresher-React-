@@ -228,7 +228,12 @@ const BookTable = () => {
                 loadBook={loadBook}
             />
 
-
+            <UpdateBook
+                setIsModalUpdateBookOpen={setIsModalUpdateBookOpen}
+                setDataUpdateBook={setDataUpdateBook}
+                dataUpdateBook={dataUpdateBook}
+                isModalUpdateBookOpen={isModalUpdateBookOpen}
+                loadBook={loadBook} />
         </>
     )
 }

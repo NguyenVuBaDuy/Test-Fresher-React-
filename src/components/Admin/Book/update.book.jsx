@@ -1,7 +1,8 @@
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Divider, Form, Input, InputNumber, message, Modal, notification, Row, Select, Upload } from "antd"
 import { useEffect, useState } from "react";
-import { createBookAPI, fetchListCategoryBook, uploadBookImage } from "../../../services/api.service";
+import { v4 as uuidv4 } from 'uuid';
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { fetchListCategoryBook, updateBookAPI, uploadBookImage } from "../../../services/api.service";
 
 
 const getBase64 = (file) =>
@@ -13,26 +14,26 @@ const getBase64 = (file) =>
     });
 
 
-const CreateBook = (props) => {
+
+
+const UpdateBook = (props) => {
+
     const [form] = Form.useForm();
 
-    const { isModalCreateBookOpen, setIsModalCreateBookOpen, loadBook } = props
+    const { isModalUpdateBookOpen, dataUpdateBook, setDataUpdateBook, setIsModalUpdateBookOpen, loadBook } = props
 
-    const [imageUrl, setImageUrl] = useState("");
+    const [listCategory, setListCategory] = useState()
 
-    const [listCategory, setListCategory] = useState([])
+    const [thumbnail, setThumbnail] = useState([])
+    const [sliders, setSliders] = useState([])
 
     const [loadingThumbnail, setLoadingThumbnail] = useState(false)
     const [loadingSliders, setLoadingSliders] = useState(false)
 
-    const [sliders, setSliders] = useState([]);
-    const [thumbnail, setThumbnail] = useState([]);
+    const [previewOpen, setPreviewOpen] = useState(false)
+    const [previewImage, setPreviewImage] = useState('')
+    const [previewTitle, setPreviewTitle] = useState('')
 
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
-
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         fetchListCategory()
@@ -51,29 +52,82 @@ const CreateBook = (props) => {
         }
     }
 
+    useEffect(() => {
+        if (dataUpdateBook && dataUpdateBook._id) {
+            form.setFieldsValue({
+                id: dataUpdateBook._id,
+                mainText: dataUpdateBook.mainText,
+                author: dataUpdateBook.author,
+                price: dataUpdateBook.price,
+                quantity: dataUpdateBook.quantity,
+                category: dataUpdateBook.category,
+                sold: dataUpdateBook.sold
+            })
+            setThumbnail([{
+                uid: uuidv4(),
+                status: 'done',
+                name: dataUpdateBook.thumbnail,
+                url: `${import.meta.env.VITE_URL_BACKEND}/images/book/${dataUpdateBook.thumbnail}`
+            }])
+
+            setSliders([...dataUpdateBook.slider].map(item => {
+                return {
+                    uid: uuidv4(),
+                    status: 'done',
+                    name: item,
+                    url: `${import.meta.env.VITE_URL_BACKEND}/images/book/${item}`
+                }
+            }))
+        }
+    }, [dataUpdateBook])
+
+    const handleUpdateBook = async (values) => {
+        if (thumbnail.length === 0) {
+            notification.error({
+                message: 'Lỗi validate',
+                description: 'Vui lòng upload ảnh thumbnail'
+            })
+            return;
+        }
+
+
+        const { id, mainText, author, price, sold, quantity, category } = values
+        const thumbnailImg = thumbnail[0].name
+        const slidersImg = sliders.map(item => item.name);
+        const res = await updateBookAPI(id, thumbnailImg, slidersImg, mainText, author, price, sold, quantity, category)
+        if (res && res.data) {
+            message.success('Update book successfully');
+            form.resetFields();
+            setSliders([]);
+            setThumbnail([]);
+            setIsModalUpdateBookOpen(false);
+            await loadBook()
+        } else {
+            notification.error({
+                message: 'Error',
+                description: res.message
+            })
+        }
+    };
+
+    const handleRemoveFile = (file, type) => {
+        if (type === 'thumbnail') {
+            setThumbnail([])
+        }
+        if (type === 'slider') {
+            const newSlider = sliders.filter(x => x.uid !== file.uid);
+            setSliders(newSlider);
+        }
+    }
+
     const handlePreview = async (file) => {
-        console.log(file)
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
         }
         setPreviewImage(file.url || file.preview);
         setPreviewOpen(true);
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1))
-    };
-
-    const handleChange = (info, type) => {
-        if (info.file.status === 'uploading') {
-            type ? setLoadingSliders(true) : setLoadingThumbnail(true)
-            return
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, (url) => {
-                type ? setLoadingSliders(false) : setLoadingThumbnail(false)
-                setImageUrl(url)
-            });
-        }
-    };
+    }
 
     const handleUploadThumbnail = async (values) => {
         const { file, onSuccess, onError } = values
@@ -89,6 +143,7 @@ const CreateBook = (props) => {
             setLoadingThumbnail(false)
         } else onError("Error")
     }
+
     const handleUploadSliders = async (values) => {
         const { file, onSuccess, onError } = values
         const res = await uploadBookImage(file)
@@ -116,73 +171,32 @@ const CreateBook = (props) => {
         return isJpgOrPng && isLt2M;
     }
 
-    const handleCreateBook = async (values) => {
-
-        if (thumbnail.length === 0) {
-            notification.error({
-                message: "Don't have thumbnail",
-                description: "Please add thumbnail"
-            })
-            return
-        }
-
-        const thumbnailImg = thumbnail[0].name
-        const sliderImg = sliders.map(slider => slider.name)
-        const { mainText, author, price, sold, quantity, category } = values
-        setLoading(true)
-        const res = await createBookAPI(thumbnailImg, sliderImg, mainText, author, price, sold, quantity, category)
-        setLoading(false)
-        if (res.data) {
-            message.success('Create book successfully');
-            form.resetFields();
-            setSliders([]);
-            setThumbnail([])
-            setIsModalCreateBookOpen(false);
-            await loadBook()
-        } else {
-            notification.error({
-                message: 'Error',
-                description: res.message
-            })
-        }
-    }
-
-    const handleRemove = (file, type) => {
-        if (type === 'thumbnail') {
-            setThumbnail([])
-        }
-
-        if (type === 'slider') {
-            const newSliders = sliders.filter(item => item.uid !== file.uid)
-            setSliders(newSliders)
-        }
-    }
-
     return (
         <>
             <Modal
-                okButtonProps={{
-                    loading: loading
-                }}
-                title="Create book"
-                open={isModalCreateBookOpen}
+                title="Update book"
+                open={isModalUpdateBookOpen}
                 onOk={() => { form.submit() }}
                 onCancel={() => {
-                    form.resetFields()
-                    setSliders([])
-                    setThumbnail([])
-                    setIsModalCreateBookOpen(false)
+                    setIsModalUpdateBookOpen(false)
                 }}
                 width={"50vw"}
             >
                 <Form
                     layout="vertical"
                     form={form}
-                    onFinish={(values) => { handleCreateBook(values) }}
+                    onFinish={(values) => { handleUpdateBook(values) }}
                     autoComplete="off"
                 >
                     <Row style={{ display: "flex", justifyContent: "space-between" }}>
                         <Col style={{ width: "calc(50% - 10px)" }}>
+                            <Form.Item
+                                hidden
+                                name="id"
+                                label="id"
+                            >
+                                <Input />
+                            </Form.Item>
                             <Form.Item
                                 name="mainText"
                                 label="Book detail"
@@ -216,7 +230,6 @@ const CreateBook = (props) => {
                     <Row style={{ display: "flex", justifyContent: "space-between" }}>
                         <Col style={{ width: "calc(25% - 10px)" }}>
                             <Form.Item
-
                                 name="price"
                                 label="Price"
                                 rules={[
@@ -284,7 +297,7 @@ const CreateBook = (props) => {
                                     },
                                 ]}
                             >
-                                <InputNumber style={{ width: "100%" }} />
+                                <InputNumber style={{ width: "100%" }} disabled />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -306,13 +319,13 @@ const CreateBook = (props) => {
                                     name="thumnail"
                                     listType="picture-card"
                                     className="avatar-uploader"
-                                    beforeUpload={beforeUpload}
-                                    customRequest={handleUploadThumbnail}
-                                    onChange={handleChange}
+                                    beforeUpload={(info) => { beforeUpload(info) }}
+                                    customRequest={(values) => { handleUploadThumbnail(values) }}
+                                    onChange={(info) => { }}
                                     onPreview={handlePreview}
                                     maxCount={1}
                                     multiple={false}
-                                    onRemove={file => handleRemove(file, 'thumbnail')}
+                                    onRemove={file => handleRemoveFile(file, 'thumbnail')}
 
                                 >
                                     <button
@@ -343,13 +356,13 @@ const CreateBook = (props) => {
                                     name="slider"
                                     listType="picture-card"
                                     className="avatar-uploader"
-                                    beforeUpload={beforeUpload}
-                                    customRequest={handleUploadSliders}
-                                    onChange={(info) => { handleChange(info, 'slider') }}
+                                    beforeUpload={(info) => { beforeUpload(info) }}
+                                    customRequest={(values) => { handleUploadSliders(values) }}
+                                    onChange={(info) => { }}
                                     onPreview={handlePreview}
                                     maxCount={6}
                                     multiple={true}
-                                    onRemove={file => handleRemove(file, 'slider')}
+                                    onRemove={file => { handleRemoveFile(file, 'slider') }}
                                 >
                                     {sliders.length < 6 &&
                                         <button
@@ -388,7 +401,4 @@ const CreateBook = (props) => {
     )
 }
 
-export default CreateBook
-
-
-
+export default UpdateBook
