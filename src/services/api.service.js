@@ -65,6 +65,33 @@ const fetchBookWithPaginationAPI = (current, pageSize, query, sortQuery) => {
     return axios.get(URL_BACKEND)
 }
 
+const fetchListCategoryBook = () => {
+    const URL_BACKEND = `/api/v1/database/category`
+    return axios.get(URL_BACKEND)
+}
+
+
+const uploadBookImage = (fileImg) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('fileImg', fileImg);
+    return axios({
+        method: 'post',
+        url: '/api/v1/file/upload',
+        data: bodyFormData,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "upload-type": "book"
+        },
+    });
+}
+
+const createBookAPI = (thumbnail, slider, mainText, author, price, sold, quantity, category) => {
+    const URL_BACKEND = `/api/v1/book`
+    const data = {
+        thumbnail, slider, mainText, author, price, sold, quantity, category
+    }
+    return axios.post(URL_BACKEND, data)
+}
 
 export {
     registerAPI,
@@ -76,5 +103,8 @@ export {
     importDataUserAPI,
     updateUserAPI,
     deleteUserAPI,
-    fetchBookWithPaginationAPI
+    fetchBookWithPaginationAPI,
+    fetchListCategoryBook,
+    uploadBookImage,
+    createBookAPI
 } 

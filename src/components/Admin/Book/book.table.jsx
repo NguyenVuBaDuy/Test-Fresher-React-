@@ -5,6 +5,8 @@ import InputFilterBook from "./input.filter.book";
 import { fetchBookWithPaginationAPI } from "../../../services/api.service";
 import moment from "moment";
 import ViewBookDetail from "./view.book.detail";
+import CreateBook from "./create.book";
+import UpdateBook from "./update.book";
 
 const BookTable = () => {
 
@@ -15,10 +17,15 @@ const BookTable = () => {
     const [total, setTotal] = useState()
 
     const [query, setQuery] = useState('')
-    const [sortQuery, setSortQuery] = useState('')
+    const [sortQuery, setSortQuery] = useState('&sort=-updatedAt')
 
     const [isViewBookDetail, setIsViewBookDetail] = useState('')
     const [dataViewBookDetail, setDataViewBookDetail] = useState('')
+
+    const [isModalCreateBookOpen, setIsModalCreateBookOpen] = useState(false)
+
+    const [isModalUpdateBookOpen, setIsModalUpdateBookOpen] = useState(false)
+    const [dataUpdateBook, setDataUpdateBook] = useState(null)
 
     const columns = [
         {
@@ -85,7 +92,8 @@ const BookTable = () => {
                     <EditOutlined
                         style={{ cursor: "pointer", color: "orange" }}
                         onClick={() => {
-
+                            setIsModalUpdateBookOpen(true)
+                            setDataUpdateBook(record)
                         }} />
 
                     <Popconfirm
@@ -157,12 +165,14 @@ const BookTable = () => {
                         onClick={() => { handleExport() }}><ExportOutlined /> Export</Button>
 
                     <Button type='primary'
-                        onClick={() => { setIsCreateUserModal(true) }}
+                        onClick={() => {
+                            setIsModalCreateBookOpen(true)
+                        }}
                     ><UserAddOutlined /> Add new</Button>
                     <ReloadOutlined
                         style={{ cursor: "pointer" }}
                         onClick={() => {
-                            setSortQuery('')
+                            setSortQuery('&sort=-updatedAt')
                             setQuery('')
                             setCurrent(1)
                             setPageSize(5)
@@ -209,7 +219,16 @@ const BookTable = () => {
                 isViewBookDetail={isViewBookDetail}
                 setIsViewBookDetail={setIsViewBookDetail}
                 dataViewBookDetail={dataViewBookDetail}
-                setDataViewBookDetail={setDataViewBookDetail} />
+                setDataViewBookDetail={setDataViewBookDetail}
+            />
+
+            <CreateBook
+                isModalCreateBookOpen={isModalCreateBookOpen}
+                setIsModalCreateBookOpen={setIsModalCreateBookOpen}
+                loadBook={loadBook}
+            />
+
+
         </>
     )
 }

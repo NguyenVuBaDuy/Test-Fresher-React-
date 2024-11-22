@@ -56,7 +56,6 @@ const ViewBookDetail = (props) => {
         setIsPreviewOpen(false)
         setPreviewImageTitle(null)
     }
-    console.log(previewImage)
     return (
         <>
             <Drawer
@@ -109,7 +108,6 @@ const ViewBookDetail = (props) => {
                 <Divider orientation="left">Book images</Divider>
 
                 <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                     listType="picture-card"
                     fileList={fileList}
                     onPreview={handlePreview}
@@ -123,9 +121,11 @@ const ViewBookDetail = (props) => {
                     open={isPreviewOpen}
                     onCancel={handleCancel}
                     footer={null}
+                    centered
                 >
                     <img src={previewImage} style={{ width: '100%' }} />
                 </Modal>
+
             </Drawer>
         </>
     )

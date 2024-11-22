@@ -19,7 +19,6 @@ const InputFilterBook = (props) => {
             }, '')
 
         }
-        console.log(dataQuery)
         setCurrent(1)
         setPageSize(5)
         setQuery(dataQuery)
