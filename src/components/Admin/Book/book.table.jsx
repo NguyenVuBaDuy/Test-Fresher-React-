@@ -1,12 +1,13 @@
 import { DeleteOutlined, EditOutlined, ExportOutlined, ReloadOutlined, UserAddOutlined } from "@ant-design/icons"
-import { Button, Col, Popconfirm, Row, Table } from "antd"
-import { useEffect, useState } from "react";
-import InputFilterBook from "./input.filter.book";
-import { fetchBookWithPaginationAPI } from "../../../services/api.service";
-import moment from "moment";
-import ViewBookDetail from "./view.book.detail";
-import CreateBook from "./create.book";
-import UpdateBook from "./update.book";
+import { Button, Col, message, notification, Popconfirm, Row, Table } from "antd"
+import { useEffect, useState } from "react"
+import InputFilterBook from "./input.filter.book"
+import { deleteBookAPI, fetchBookWithPaginationAPI } from "../../../services/api.service"
+import moment from "moment"
+import ViewBookDetail from "./view.book.detail"
+import CreateBook from "./create.book"
+import UpdateBook from "./update.book"
+import * as XLSX from 'xlsx'
 
 const BookTable = () => {
 
@@ -26,6 +27,10 @@ const BookTable = () => {
 
     const [isModalUpdateBookOpen, setIsModalUpdateBookOpen] = useState(false)
     const [dataUpdateBook, setDataUpdateBook] = useState(null)
+
+    useEffect(() => {
+        loadBook()
+    }, [current, pageSize, query, sortQuery])
 
     const columns = [
         {
@@ -99,7 +104,7 @@ const BookTable = () => {
                     <Popconfirm
                         title="Delete the user"
                         description="Are you sure to delete this user?"
-                        onConfirm={() => { }}
+                        onConfirm={() => { handleDeleteBook(record._id) }}
                         onCancel={() => { }}
                         okText="Yes"
                         cancelText="No"
@@ -111,9 +116,6 @@ const BookTable = () => {
         },
     ];
 
-    useEffect(() => {
-        loadBook()
-    }, [current, pageSize, query, sortQuery])
 
     const loadBook = async () => {
         const res = await fetchBookWithPaginationAPI(current, pageSize, query, sortQuery)
@@ -151,6 +153,15 @@ const BookTable = () => {
 
     }
 
+    const handleExport = () => {
+        if (dataBooks && dataBooks.length) {
+            const worksheet = XLSX.utils.json_to_sheet(dataBooks)
+            const workbook = XLSX.utils.book_new()
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1")
+            XLSX.writeFile(workbook, "Books.xlsx")
+        }
+    }
+
     const renderHeaderTable = () => {
 
         return (
@@ -183,6 +194,18 @@ const BookTable = () => {
         )
     }
 
+    const handleDeleteBook = async (id) => {
+        const res = await deleteBookAPI(id)
+        if (res.data) {
+            message.success('Delete book successfully')
+            await loadBook()
+        } else {
+            notification.error({
+                message: "Delete book failed",
+                description: res.message
+            })
+        }
+    }
 
     return (
         <>
