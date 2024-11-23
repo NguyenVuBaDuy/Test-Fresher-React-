@@ -36,7 +36,9 @@ const CreateUser = (props) => {
             open={isCreateUserModal}
             onOk={() => { form.submit() }}
             onCancel={resetAndCloseModal}
-            centered >
+            centered
+            okText="Create"
+        >
             <Form
                 form={form}
                 layout="vertical"

@@ -174,6 +174,7 @@ const CreateBook = (props) => {
                     setIsModalCreateBookOpen(false)
                 }}
                 width={"50vw"}
+                okText="Create"
             >
                 <Form
                     layout="vertical"

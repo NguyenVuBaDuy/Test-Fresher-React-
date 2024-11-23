@@ -102,8 +102,8 @@ const BookTable = () => {
                         }} />
 
                     <Popconfirm
-                        title="Delete the user"
-                        description="Are you sure to delete this user?"
+                        title="Delete the book"
+                        description="Are you sure to delete this book?"
                         onConfirm={() => { handleDeleteBook(record._id) }}
                         onCancel={() => { }}
                         okText="Yes"

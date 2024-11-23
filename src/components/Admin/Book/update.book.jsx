@@ -181,6 +181,7 @@ const UpdateBook = (props) => {
                     setIsModalUpdateBookOpen(false)
                 }}
                 width={"50vw"}
+                okText="Save"
             >
                 <Form
                     layout="vertical"
