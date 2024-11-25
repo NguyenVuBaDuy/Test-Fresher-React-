@@ -1,32 +1,15 @@
 import { FilterTwoTone, ReloadOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination } from 'antd';
+import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin } from 'antd';
 import './home.scss'
 import { useEffect, useState } from 'react';
 import { fetchBookWithPaginationAPI, fetchListCategoryBook } from '../../services/api.service';
 
-const ItemBook = () => {
-    return (
-        <div className="column">
-            <div className='wrapper'>
-                <div className='thumbnail'>
-                    <img src="http://localhost:8080/images/book/3-931186dd6dcd231da1032c8220332fea.jpg" alt="thumbnail book" />
-                </div>
-                <div className='text'>Tư Duy Về Tiền Bạc - Những Lựa Chọn Tài Chính Đúng Đắn Và Sáng Suốt Hơn</div>
-                <div className='price'>
-                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                </div>
-                <div className='rating'>
-                    <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
-                    <span>Sold 1k</span>
-                </div>
-            </div>
-        </div>
-    )
-}
 
 const HomePage = () => {
 
     const [form] = Form.useForm();
+
+    const [loading, setLoading] = useState(false)
 
     const [category, setCategory] = useState([])
 
@@ -35,6 +18,12 @@ const HomePage = () => {
     const [current, setCurrent] = useState(1)
     const [pageSize, setPageSize] = useState(5)
     const [total, setTotal] = useState(null)
+
+    const [filterQuery, setFilterQuery] = useState(null)
+    const [sortQuery, setSortQuery] = useState('&sort=-sold')
+
+    const [priceFrom, setPriceFrom] = useState(0)
+    const [priceTo, setPriceTo] = useState(null)
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -48,36 +37,38 @@ const HomePage = () => {
 
     useEffect(() => {
         loadBook()
-    }, [current, pageSize])
+    }, [current, pageSize, filterQuery, sortQuery])
 
     const loadBook = async () => {
-        const res = await fetchBookWithPaginationAPI(current, pageSize)
+        setLoading(true)
+        const res = await fetchBookWithPaginationAPI(current, pageSize, filterQuery, sortQuery)
         if (res.data) {
             setDataBooks(res.data.result)
             setCurrent(+res.data.meta.current)
             setPageSize(+res.data.meta.pageSize)
             setTotal(+res.data.meta.total)
         }
+        setLoading(false)
     }
 
     const items = [
         {
-            key: '1',
+            key: '-sold',
             label: `Popular`,
             children: <></>,
         },
         {
-            key: '2',
+            key: '-updatedAt',
             label: `New`,
             children: <></>,
         },
         {
-            key: '3',
+            key: 'price',
             label: `Low to high`,
             children: <></>,
         },
         {
-            key: '4',
+            key: '-price',
             label: `High to low`,
             children: <></>,
         },
@@ -95,9 +86,45 @@ const HomePage = () => {
         }
     }
 
-    const handleFilterChange = (values) => {
-        console.log(values)
+    const handleFilterChange = (changedValues, { category, range }) => {
+        if (changedValues.category) {
+            let filter = ''
+            if (category && category.length) {
+                filter += `&category=` + category.join(',')
+            }
+
+            if (range?.from >= 0) {
+                filter += `&price>=${range.from}`
+            }
+            if (range?.to >= 0) {
+                filter += `&price<=${range.to}`
+            }
+
+            setFilterQuery(filter)
+
+        }
     }
+
+    const handleSortChange = (values) => {
+        if (values) {
+            setSortQuery(`&sort=${values}`)
+        }
+    }
+
+    const handleFinish = (values) => {
+        if (values?.range?.from >= 0 && values?.range?.to >= 0) {
+            let filter = `&price>=${values?.range?.from}&price<=${values?.range?.to}`
+            setPriceFrom(values?.range?.from)
+            setPriceTo(values?.range?.to)
+            if (values?.category?.length) {
+                const cate = values?.category?.join(',')
+                filter += `&category=${cate}`
+            }
+            setFilterQuery(filter)
+        }
+    }
+
+
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -111,14 +138,19 @@ const HomePage = () => {
                                 </span>
                                 <ReloadOutlined
                                     title="Reset"
-                                    onClick={() => { form.resetFields() }}
+                                    onClick={() => {
+                                        form.resetFields()
+                                        setFilterQuery('')
+                                        setPriceFrom(0)
+                                        setPriceTo(null)
+                                    }}
                                 />
                             </div>
                             <Divider />
                             <Form
-                                onFinish={(values) => { }}
+                                onFinish={(values) => { handleFinish(values) }}
                                 form={form}
-                                onValuesChange={(_, values) => { handleFilterChange(values) }}
+                                onValuesChange={(changedValues, values) => { handleFilterChange(changedValues, values) }}
                             >
                                 <Form.Item
                                     name="category"
@@ -204,43 +236,47 @@ const HomePage = () => {
                         </div>
                     </Col>
                     <Col md={20} xs={24} >
-                        <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
-                            <Row>
-                                <Tabs defaultActiveKey="1" items={items} onChange={() => { }} />
-                            </Row>
-                            <Row className='customize-row'>
-                                {dataBooks?.map(item => {
-                                    return (
-                                        <div className="column">
-                                            <div className='wrapper'>
-                                                <div className='thumbnail'>
-                                                    <img src={`${import.meta.env.VITE_URL_BACKEND}/images/book/${item.thumbnail}`} alt="thumbnail book" />
-                                                </div>
-                                                <div className='text'>{item.mainText}</div>
-                                                <div className='price'>
-                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
-                                                </div>
-                                                <div className='rating'>
-                                                    <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
-                                                    <span>Sold {item.sold}</span>
+                        <Spin spinning={loading} tip='Loading...'>
+                            <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
+                                <Row>
+                                    <Tabs defaultActiveKey="-sold"
+                                        items={items}
+                                        onChange={(values) => { handleSortChange(values) }} />
+                                </Row>
+                                <Row className='customize-row'>
+                                    {dataBooks?.map(item => {
+                                        return (
+                                            <div className="column" key={item._id} >
+                                                <div className='wrapper'>
+                                                    <div className='thumbnail'>
+                                                        <img src={`${import.meta.env.VITE_URL_BACKEND}/images/book/${item.thumbnail}`} alt="thumbnail book" />
+                                                    </div>
+                                                    <div className='text'>{item.mainText}</div>
+                                                    <div className='price'>
+                                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+                                                    </div>
+                                                    <div className='rating'>
+                                                        <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 10 }} />
+                                                        <span>Sold {item.sold}</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    })}
 
-                            </Row>
-                            <div style={{ marginTop: 30 }}></div>
-                            <Row style={{ display: "flex", justifyContent: "center" }}>
-                                <Pagination
-                                    current={current}
-                                    pageSize={pageSize}
-                                    total={total}
-                                    responsive
-                                    onChange={(p, s) => { handleOnChange({ current: p, pageSize: s }) }}
-                                />
-                            </Row>
-                        </div>
+                                </Row>
+                                <div style={{ marginTop: 30 }}></div>
+                                <Row style={{ display: "flex", justifyContent: "center" }}>
+                                    <Pagination
+                                        current={current}
+                                        pageSize={pageSize}
+                                        total={total}
+                                        responsive
+                                        onChange={(p, s) => { handleOnChange({ current: p, pageSize: s }) }}
+                                    />
+                                </Row>
+                            </div>
+                        </Spin>
                     </Col>
                 </Row>
             </div>
