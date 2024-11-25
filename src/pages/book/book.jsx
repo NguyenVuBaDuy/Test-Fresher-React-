@@ -1,8 +1,14 @@
-import BookTable from "../../components/Admin/Book/book.table"
+import { useLocation } from "react-router-dom"
 
 const BookPage = () => {
+    let location = useLocation()
+
+    let params = new URLSearchParams(location.search)
+    const id = params?.get('id')
+
+
     return (
-        <BookTable />
+        <div>Book page</div>
     )
 }
 

@@ -22,6 +22,8 @@ import LayoutAdmin from './components/Admin/User/layout.admin';
 import UserPage from './pages/user/user';
 import OrderPage from './pages/order/order';
 import './styles/reset.scss';
+import ManageBookPage from './pages/admin/book/mange.book';
+import ManageUserPage from './pages/admin/user/manage.user';
 
 
 const Layout = () => {
@@ -73,7 +75,7 @@ const App = () => {
           element: <ContactPage />
         },
         {
-          path: "book",
+          path: "book/:slug",
           element: <BookPage />
         }
       ]
@@ -85,15 +87,15 @@ const App = () => {
       children: [
         {
           index: true,
-          element: <AdminPage />
+          element: <PrivateRoute><AdminPage /></PrivateRoute>
         },
         {
           path: "/admin/user",
-          element: <UserPage />
+          element: <PrivateRoute><ManageUserPage /></PrivateRoute>
         },
         {
           path: "/admin/book",
-          element: <BookPage />
+          element: <PrivateRoute><ManageBookPage /></PrivateRoute>
         },
         {
           path: "/admin/order",
