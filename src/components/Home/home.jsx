@@ -17,7 +17,7 @@ const HomePage = () => {
     const [dataBooks, setDataBooks] = useState([])
 
     const [current, setCurrent] = useState(1)
-    const [pageSize, setPageSize] = useState(5)
+    const [pageSize, setPageSize] = useState(10)
     const [total, setTotal] = useState(null)
 
     const [filterQuery, setFilterQuery] = useState(null)
@@ -169,14 +169,14 @@ const HomePage = () => {
 
 
     return (
-        <div style={{ background: '#efefef', padding: "20px 0" }}>
+        <div style={{ background: '#efefef', padding: "20px 0", height: "100%" }}>
             <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
                 <Row gutter={[20, 20]}>
                     <Col md={4} sm={0} xs={0}>
                         <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
                             <div style={{ display: 'flex', justifyContent: "space-between" }}>
                                 <span> <FilterTwoTone />
-                                    <span style={{ fontWeight: 500 }}> Bộ lọc tìm kiếm</span>
+                                    <span style={{ fontWeight: 500 }}> Search filter</span>
                                 </span>
                                 <ReloadOutlined
                                     title="Reset"

@@ -1,10 +1,11 @@
+import './footer.css'
 
 const Footer = () => {
     return (
-        <div>
-            footer
-        </div>
+        <footer className="footer">
+            <i>© 2024 ADUBY Official - All rights reserved @baduy</i>
+        </footer>
     )
 }
 
-export default Footer
+export default Footer   

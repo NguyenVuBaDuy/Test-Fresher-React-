@@ -28,10 +28,10 @@ import ManageUserPage from './pages/admin/user/manage.user';
 
 const Layout = () => {
   return (
-    <div className='layout-app'>
+    <div className='layout-app' style={{ height: "100%" }}>
       <Header />
       <Outlet />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   )
 }
@@ -119,6 +119,7 @@ const App = () => {
         || window.location.pathname === '/login'
         || window.location.pathname === '/register'
         || window.location.pathname === '/'
+        || window.location.pathname.startsWith('/book/')
         ?
         <RouterProvider router={router} />
         :

@@ -68,7 +68,7 @@ const Header = () => {
                     <nav className="page-header__bottom">
                         <ul id="navigation" className="navigation">
                             <li className="navigation__item mobile hover">
-                                <Space >
+                                <Space onClick={() => { navigate('/') }}>
                                     <HomeOutlined /> Home
                                 </Space>
                             </li>

@@ -106,6 +106,11 @@ const deleteBookAPI = (id) => {
     return axios.delete(URL_BACKEND)
 }
 
+const getBookByIdAPI = (id) => {
+    const URL_BACKEND = `/api/v1/book/${id}`
+    return axios.get(URL_BACKEND)
+}
+
 export {
     registerAPI,
     loginAPI,
@@ -121,5 +126,6 @@ export {
     uploadBookImage,
     createBookAPI,
     updateBookAPI,
-    deleteBookAPI
+    deleteBookAPI,
+    getBookByIdAPI
 } 
