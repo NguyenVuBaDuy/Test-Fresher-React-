@@ -179,6 +179,7 @@ const UpdateBook = (props) => {
                 onOk={() => { form.submit() }}
                 onCancel={() => {
                     setIsModalUpdateBookOpen(false)
+                    setDataUpdateBook('')
                 }}
                 width={"50vw"}
                 okText="Save"
