@@ -1,6 +1,6 @@
 import { DownOutlined, HomeOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons';
 import './header.scss'
-import { Avatar, Badge, Divider, Drawer, Dropdown, Input, message, Space } from 'antd'
+import { Avatar, Badge, Divider, Drawer, Dropdown, Input, message, Popover, Space } from 'antd'
 import { FiShoppingCart } from 'react-icons/fi';
 import { FaReact } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -9,16 +9,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOutAPI } from '../../services/api.service';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 
-
 const Header = () => {
 
-    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false)
 
-    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
-    const user = useSelector(state => state.account.user);
+    const isAuthenticated = useSelector(state => state.account.isAuthenticated)
+    const user = useSelector(state => state.account.user)
+    const carts = useSelector(state => state.order.carts)
+
     const dispatch = useDispatch()
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const handleLogOut = async () => {
         const res = await logOutAPI()
@@ -46,6 +47,30 @@ const Header = () => {
         },
 
     ];
+
+
+    const content = (
+        <div className="pop-cart">
+            <div className="content-cart">
+                {carts?.map((item, index) => {
+                    if (index >= 5) return
+                    return (
+                        <div className="book">
+                            <img src={`${import.meta.env.VITE_URL_BACKEND}/images/book/${item?.detail?.thumbnail}`} />
+                            <div className='mainText'>{item?.detail?.mainText}</div>
+                            <div className="price">
+                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.detail?.price)}
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+            <div className="footer-cart">
+                <div style={{ color: '#757575' }}>{carts.length <= 5 ? '' : `${carts.length - 5} other product${carts.length != 6 ? 's' : ''}`}</div>
+                <button className="button-cart">View cart</button>
+            </div>
+        </div>
+    );
 
     return (
         <>
@@ -89,12 +114,22 @@ const Header = () => {
                             <li className="navigation__item mobile"><Divider type='vertical' /></li>
 
                             <li className="navigation__item">
-                                <Badge
-                                    count={5}
-                                    size={"small"}
+                                <Popover
+                                    placement={'bottomRight'}
+                                    content={content}
+                                    title="New products added"
+                                    rootClassName="popover-carts"
+                                    className='popover-carts'
                                 >
-                                    <FiShoppingCart className='icon-cart' />
-                                </Badge>
+                                    <Badge
+                                        count={carts.length}
+                                        size={"small"}
+                                        showZero
+                                    >
+                                        <FiShoppingCart className='icon-cart' />
+                                    </Badge>
+                                </Popover>
+
                             </li>
                         </ul>
                     </nav>

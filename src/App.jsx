@@ -19,11 +19,11 @@ import ErrorPage from './pages/error/error';
 import AdminPage from './pages/admin/admin';
 import PrivateRoute from './components/PrivateRoute/private.route';
 import LayoutAdmin from './components/Admin/User/layout.admin';
-import UserPage from './pages/user/user';
 import OrderPage from './pages/order/order';
 import './styles/reset.scss';
 import ManageBookPage from './pages/admin/book/mange.book';
 import ManageUserPage from './pages/admin/user/manage.user';
+import './styles/global.scss'
 
 
 const Layout = () => {
