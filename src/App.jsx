@@ -24,6 +24,7 @@ import './styles/reset.scss';
 import ManageBookPage from './pages/admin/book/mange.book';
 import ManageUserPage from './pages/admin/user/manage.user';
 import './styles/global.scss'
+import PrivateOrder from './components/PrivateRoute/private.order';
 
 
 const Layout = () => {
@@ -77,6 +78,10 @@ const App = () => {
         {
           path: "book/:slug",
           element: <BookPage />
+        },
+        {
+          path: 'order',
+          element: <PrivateOrder><OrderPage /></PrivateOrder>
         }
       ]
     },

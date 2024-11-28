@@ -169,7 +169,7 @@ const HomePage = () => {
 
 
     return (
-        <div style={{ background: '#efefef', padding: "20px 0", height: "100%" }}>
+        <div style={{ background: '#efefef', padding: "20px 0", minHeight: "calc(100vh - 123.4px)" }}>
             <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
                 <Row gutter={[20, 20]}>
                     <Col md={4} sm={0} xs={0}>

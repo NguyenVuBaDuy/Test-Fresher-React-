@@ -69,7 +69,7 @@ const Header = () => {
                 </div>
                 <div className="footer-cart">
                     <div style={{ color: '#757575' }}>{carts.length <= 5 ? '' : `${carts.length - 5} other product${carts.length != 6 ? 's' : ''}`}</div>
-                    <button className="button-cart">View cart</button>
+                    <button className="button-cart" onClick={() => { navigate('/order') }}>View cart</button>
                 </div>
             </div>
             :
