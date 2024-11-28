@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logOutAPI } from '../../services/api.service';
 import { doLogoutAction } from '../../redux/account/accountSlice';
+import { BsCart } from "react-icons/bs";
 
 const Header = () => {
 
@@ -50,27 +51,33 @@ const Header = () => {
 
 
     const content = (
-        <div className="pop-cart">
-            <div className="content-cart">
-                {carts?.map((item, index) => {
-                    if (index >= 5) return
-                    return (
-                        <div className="book">
-                            <img src={`${import.meta.env.VITE_URL_BACKEND}/images/book/${item?.detail?.thumbnail}`} />
-                            <div className='mainText'>{item?.detail?.mainText}</div>
-                            <div className="price">
-                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.detail?.price)}
+        carts.length > 0 ?
+            <div className="pop-cart">
+                <div className="content-cart">
+                    {carts?.map((item, index) => {
+                        if (index >= 5) return
+                        return (
+                            <div className="book">
+                                <img src={`${import.meta.env.VITE_URL_BACKEND}/images/book/${item?.detail?.thumbnail}`} />
+                                <div className='mainText'>{item?.detail?.mainText}</div>
+                                <div className="price">
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.detail?.price)}
+                                </div>
                             </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
+                </div>
+                <div className="footer-cart">
+                    <div style={{ color: '#757575' }}>{carts.length <= 5 ? '' : `${carts.length - 5} other product${carts.length != 6 ? 's' : ''}`}</div>
+                    <button className="button-cart">View cart</button>
+                </div>
             </div>
-            <div className="footer-cart">
-                <div style={{ color: '#757575' }}>{carts.length <= 5 ? '' : `${carts.length - 5} other product${carts.length != 6 ? 's' : ''}`}</div>
-                <button className="button-cart">View cart</button>
+            :
+            <div style={{ padding: "35px 40px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <BsCart style={{ fontSize: "48px", color: "red", marginBottom: "10px" }} />
+                <div style={{ color: '#757575' }}>There are no products yet</div>
             </div>
-        </div>
-    );
+    )
 
     return (
         <>
@@ -117,7 +124,7 @@ const Header = () => {
                                 <Popover
                                     placement={'bottomRight'}
                                     content={content}
-                                    title="New products added"
+                                    title={carts.length > 0 ? "New products added" : ''}
                                     rootClassName="popover-carts"
                                     className='popover-carts'
                                 >

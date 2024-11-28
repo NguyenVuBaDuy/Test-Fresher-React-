@@ -116,6 +116,7 @@ const ViewDetail = (props) => {
                                             />
                                             <button onClick={() => { handleChangeQuantityButton('plus') }}><PlusOutlined /></button>
                                         </span>
+                                        <span style={{ marginLeft: "10px", color: "#757575" }}>{dataBook.quantity} available</span>
                                     </div>
 
                                     <div className='buy'>
