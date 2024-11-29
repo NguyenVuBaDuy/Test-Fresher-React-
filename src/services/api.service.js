@@ -111,6 +111,12 @@ const getBookByIdAPI = (id) => {
     return axios.get(URL_BACKEND)
 }
 
+const orderAPI = (data) => {
+    const URL_BACKEND = `/api/v1/order`
+    return axios.get(URL_BACKEND, data)
+}
+
+
 export {
     registerAPI,
     loginAPI,
@@ -127,5 +133,6 @@ export {
     createBookAPI,
     updateBookAPI,
     deleteBookAPI,
-    getBookByIdAPI
+    getBookByIdAPI,
+    orderAPI
 } 

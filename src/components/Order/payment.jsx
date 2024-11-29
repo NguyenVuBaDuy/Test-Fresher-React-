@@ -1,10 +1,12 @@
-import { Col, Divider, Form, Input, InputNumber, Radio, Row, Steps } from "antd"
+import { Col, Divider, Form, Input, InputNumber, message, notification, Radio, Row, Steps } from "antd"
 import './order.scss'
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import ProductList from "./product.list"
 import TextArea from "antd/es/input/TextArea"
 import { doDeleteAllBookAction } from "../../redux/order/orderSlice"
+import { orderAPI } from "../../services/api.service"
+import { LoadingOutlined } from "@ant-design/icons"
 
 const Payment = (props) => {
 
@@ -14,6 +16,7 @@ const Payment = (props) => {
     const [total, setTotal] = useState(0)
     const [form] = Form.useForm()
     const user = useSelector(state => state.account.user)
+    const [isSubmit, setIsSubmit] = useState(false)
     const dispatch = useDispatch()
 
 
@@ -31,9 +34,37 @@ const Payment = (props) => {
         })
     }, [])
 
-    const handleOrder = () => {
-        setCurrent(3)
-        dispatch(doDeleteAllBookAction())
+    const handleOrder = async (values) => {
+        if (values) {
+            setCurrent(3)
+            const detailOrder = carts.map(item => {
+                return {
+                    bookName: item.detail.mainText,
+                    quantity: item.quantity,
+                    _id: item._id
+                }
+            })
+
+            const data = {
+                name: values.fullName,
+                address: values.address,
+                phone: values.phone,
+                totalPrice: total,
+                detail: detailOrder
+            }
+            const res = await orderAPI(data)
+            setIsSubmit(true)
+            if (res.data) {
+                dispatch(doDeleteAllBookAction())
+                message.success("Order successfully!")
+            } else {
+                notification.success({
+                    message: "Order failed!",
+                    description: JSON.stringify(res.message)
+                })
+            }
+            setIsSubmit(false)
+        }
     }
 
     return (
@@ -80,7 +111,7 @@ const Payment = (props) => {
                                 <div className='info'>
                                     <Form
                                         form={form}
-                                        onFinish={() => { handleOrder() }}
+                                        onFinish={(values) => { handleOrder(values) }}
                                         layout="vertical"
                                     >
                                         <Form.Item
@@ -153,7 +184,10 @@ const Payment = (props) => {
                                     <button
                                         onClick={() => { form.submit() }}
                                         style={{ width: 'calc(70% - 10px)' }}
-                                    >Buy ({carts?.length ?? 0})</button>
+                                        disabled={isSubmit}
+                                    >
+                                        {isSubmit && <span><LoadingOutlined />&nbsp;</span>}
+                                        Buy ({carts?.length ?? 0})</button>
                                 </div>
                             </div>
 
