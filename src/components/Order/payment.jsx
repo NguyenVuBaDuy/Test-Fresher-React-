@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import ProductList from "./product.list"
 import TextArea from "antd/es/input/TextArea"
 import { doDeleteAllBookAction } from "../../redux/order/orderSlice"
-import { orderAPI } from "../../services/api.service"
+import { createOrderAPI } from "../../services/api.service"
 import { LoadingOutlined } from "@ant-design/icons"
 
 const Payment = (props) => {
@@ -52,7 +52,7 @@ const Payment = (props) => {
                 totalPrice: total,
                 detail: detailOrder
             }
-            const res = await orderAPI(data)
+            const res = await createOrderAPI(data)
             setIsSubmit(true)
             if (res.data) {
                 dispatch(doDeleteAllBookAction())

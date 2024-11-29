@@ -1,12 +1,13 @@
 import { Button, Col, Result, Row, Steps } from "antd"
 import './order.scss'
 import { SmileOutlined } from "@ant-design/icons"
+import { useNavigate } from "react-router-dom"
 
 const OrderDone = (props) => {
 
     const { current } = props
 
-
+    const navigate = useNavigate()
 
     return (
         <div
@@ -43,7 +44,9 @@ const OrderDone = (props) => {
                         <Result
                             icon={<SmileOutlined />}
                             title="Your order has been successfully placed!"
-                            extra={<Button type="primary">View order history</Button>}
+                            extra={<Button type="primary"
+                                onClick={() => { navigate('/history') }}
+                            >View order history</Button>}
                         />
                     </Col>
                 </Row>

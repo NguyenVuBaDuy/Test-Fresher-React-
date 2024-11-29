@@ -42,11 +42,15 @@ const Header = () => {
             key: 'account',
         },
         {
+            label: <div onClick={() => { navigate('/history') }} style={{ width: "100%" }}>
+                <label style={{ cursor: "pointer" }}>Order history</label></div>,
+            key: 'history',
+        },
+        {
             label: <div onClick={() => { handleLogOut() }} style={{ width: "100%" }}>
                 <label style={{ cursor: "pointer" }}>Log out</label></div>,
             key: 'logout',
         },
-
     ];
 
 

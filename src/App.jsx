@@ -25,6 +25,7 @@ import ManageBookPage from './pages/admin/book/mange.book';
 import ManageUserPage from './pages/admin/user/manage.user';
 import './styles/global.scss'
 import PrivateOrder from './components/PrivateRoute/private.order';
+import HistoryPage from './pages/history/history';
 
 
 const Layout = () => {
@@ -82,6 +83,10 @@ const App = () => {
         {
           path: 'order',
           element: <PrivateOrder><OrderPage /></PrivateOrder>
+        },
+        {
+          path: '/history',
+          element: <HistoryPage />
         }
       ]
     },
