@@ -26,6 +26,7 @@ import ManageUserPage from './pages/admin/user/manage.user';
 import './styles/global.scss'
 import PrivateOrder from './components/PrivateRoute/private.order';
 import HistoryPage from './pages/history/history';
+import ManageOrder from './pages/admin/order/manage.order';
 
 
 const Layout = () => {
@@ -109,7 +110,7 @@ const App = () => {
         },
         {
           path: "/admin/order",
-          element: <OrderPage />
+          element: <PrivateRoute><ManageOrder /></PrivateRoute>
         }
       ]
     },

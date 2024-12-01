@@ -149,6 +149,11 @@ const changePasswordAPI = (email, oldpass, newpass) => {
     return axios.post(URL_BACKEND, data)
 }
 
+const fetchOrderAPI = (current, pageSize, sortQuery) => {
+    const URL_BACKEND = `/api/v1/order?current=${current}&pageSize=${pageSize}${sortQuery ? sortQuery : ''}`
+    return axios.get(URL_BACKEND)
+}
+
 export {
     registerAPI,
     loginAPI,
@@ -170,5 +175,6 @@ export {
     fetchHistoryAPI,
     uploadAvatarAPI,
     changeInfoAPI,
-    changePasswordAPI
+    changePasswordAPI,
+    fetchOrderAPI
 } 
