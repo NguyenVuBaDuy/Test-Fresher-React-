@@ -121,6 +121,34 @@ const fetchHistoryAPI = () => {
     return axios.get(URL_BACKEND)
 }
 
+const uploadAvatarAPI = (fileImg) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('fileImg', fileImg);
+    return axios({
+        method: 'post',
+        url: '/api/v1/file/upload',
+        data: bodyFormData,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "upload-type": "avatar"
+        },
+    });
+}
+
+const changeInfoAPI = (fullName, phone, avatar, _id) => {
+    const URL_BACKEND = `/api/v1/user`
+    const data = {
+        fullName, phone, avatar, _id
+    }
+    return axios.put(URL_BACKEND, data)
+}
+
+const changePasswordAPI = (email, oldpass, newpass) => {
+    const URL_BACKEND = '/api/v1/user/change-password'
+    const data = { email, oldpass, newpass }
+    return axios.post(URL_BACKEND, data)
+}
+
 export {
     registerAPI,
     loginAPI,
@@ -139,5 +167,8 @@ export {
     deleteBookAPI,
     getBookByIdAPI,
     createOrderAPI,
-    fetchHistoryAPI
+    fetchHistoryAPI,
+    uploadAvatarAPI,
+    changeInfoAPI,
+    changePasswordAPI
 } 

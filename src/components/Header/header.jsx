@@ -9,12 +9,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOutAPI } from '../../services/api.service';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 import { BsCart } from "react-icons/bs";
+import AccountManagement from '../User/account.management';
 
 const Header = () => {
 
     const [openDrawer, setOpenDrawer] = useState(false)
 
     const isAuthenticated = useSelector(state => state.account.isAuthenticated)
+    const [isModalChangeInfoOpen, setIsModalChangeInfoOpen] = useState(false)
     const user = useSelector(state => state.account.user)
     const carts = useSelector(state => state.order.carts)
 
@@ -38,7 +40,8 @@ const Header = () => {
             key: 'admin',
         }] : []),
         {
-            label: <label style={{ cursor: "pointer" }}>Account management</label>,
+            label: <div onClick={() => { setIsModalChangeInfoOpen(true) }} style={{ width: "100%" }}>
+                <label style={{ cursor: "pointer" }}>Account management</label></div>,
             key: 'account',
         },
         {
@@ -158,6 +161,10 @@ const Header = () => {
                 <p>Logout</p>
                 <Divider />
             </Drawer>
+            <AccountManagement
+                setIsModalChangeInfoOpen={setIsModalChangeInfoOpen}
+                isModalChangeInfoOpen={isModalChangeInfoOpen}
+            />
         </>
     )
 }
