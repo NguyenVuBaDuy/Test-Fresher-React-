@@ -51,8 +51,6 @@ const HomePage = () => {
         if (res.data) {
             console.log(res)
             setDataBooks(res.data.result)
-            setCurrent(+res.data.meta.current)
-            setPageSize(+res.data.meta.pageSize || 10)
             setTotal(+res.data.meta.total)
         }
         setLoading(false)
@@ -190,6 +188,7 @@ const HomePage = () => {
                                     onClick={() => {
                                         form.resetFields()
                                         setFilterQuery('')
+                                        setSearch('')
                                     }}
                                 />
                             </div>

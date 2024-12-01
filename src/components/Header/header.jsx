@@ -106,6 +106,7 @@ const Header = (props) => {
                                 className="input-search" type={'text'}
                                 placeholder="What are you looking for today?"
                                 onChange={(event) => handleOnChange(event.target.value)}
+                                value={search}
                             />
                         </div>
 
