@@ -3,7 +3,7 @@ import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pag
 import './home.scss'
 import { useEffect, useState } from 'react';
 import { fetchBookWithPaginationAPI, fetchListCategoryBook } from '../../services/api.service';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 
 const HomePage = () => {
@@ -23,6 +23,8 @@ const HomePage = () => {
     const [filterQuery, setFilterQuery] = useState(null)
     const [sortQuery, setSortQuery] = useState('&sort=-sold')
 
+    const [search, setSearch] = useOutletContext()
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -37,15 +39,20 @@ const HomePage = () => {
 
     useEffect(() => {
         loadBook()
-    }, [current, pageSize, filterQuery, sortQuery])
+    }, [current, pageSize, filterQuery, sortQuery, search])
 
     const loadBook = async () => {
         setLoading(true)
-        const res = await fetchBookWithPaginationAPI(current, pageSize, filterQuery, sortQuery)
+        let filter = filterQuery
+        if (search) {
+            filter += `&mainText=/${search}/i`
+        }
+        const res = await fetchBookWithPaginationAPI(current, pageSize, filter, sortQuery)
         if (res.data) {
+            console.log(res)
             setDataBooks(res.data.result)
             setCurrent(+res.data.meta.current)
-            setPageSize(+res.data.meta.pageSize)
+            setPageSize(+res.data.meta.pageSize || 10)
             setTotal(+res.data.meta.total)
         }
         setLoading(false)

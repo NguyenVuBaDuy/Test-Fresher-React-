@@ -11,7 +11,9 @@ import { doLogoutAction } from '../../redux/account/accountSlice';
 import { BsCart } from "react-icons/bs";
 import AccountManagement from '../User/account.management';
 
-const Header = () => {
+const Header = (props) => {
+
+    const { search, setSearch } = props
 
     const [openDrawer, setOpenDrawer] = useState(false)
 
@@ -86,6 +88,9 @@ const Header = () => {
             </div>
     )
 
+    const handleOnChange = (value) => {
+        setSearch(value)
+    }
     return (
         <>
             <div className='header-container'>
@@ -100,6 +105,7 @@ const Header = () => {
                             <input
                                 className="input-search" type={'text'}
                                 placeholder="What are you looking for today?"
+                                onChange={(event) => handleOnChange(event.target.value)}
                             />
                         </div>
 

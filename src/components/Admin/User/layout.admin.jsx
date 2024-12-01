@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     DollarOutlined,
     DownOutlined,
@@ -35,6 +35,8 @@ const LayoutAdmin = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    const [selectedKey, setSelectedKey] = useState('dashboard')
+
     const handleLogOut = async () => {
         const res = await logOutAPI()
         if (res.data) {
@@ -44,14 +46,18 @@ const LayoutAdmin = () => {
         }
     }
 
+    useEffect(() => {
+        const key = window.location.pathname.split('/').at(-1)
+        setSelectedKey(key)
+    }, [])
+
     const items = [
-        getItem(<Link to={'/admin'}>Dashboard</Link>, 1, <WindowsOutlined />),
-        getItem('Manage Users', 2, <UserOutlined />, [
-            getItem(<Link to={'/admin/user'}>CRUD</Link>, 3, <FaUserGroup />),
-            getItem("File", 4, <FileOutlined />)
+        getItem(<Link to={'/admin'}>Dashboard</Link>, 'admin', <WindowsOutlined />),
+        getItem('Manage Users', 'manageUsers', <UserOutlined />, [
+            getItem(<Link to={'/admin/user'}>CRUD</Link>, 'user', <FaUserGroup />),
         ]),
-        getItem(<Link to={'/admin/book'}>Manage Book</Link>, 5, <FaBook />),
-        getItem(<Link to={'/admin/order'}>Order</Link>, 6, <DollarOutlined />)
+        getItem(<Link to={'/admin/book'}>Manage Book</Link>, 'book', <FaBook />),
+        getItem(<Link to={'/admin/order'}>Manage Order</Link>, 'order', <DollarOutlined />)
 
     ];
 
@@ -74,6 +80,12 @@ const LayoutAdmin = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+
+
+    const handleSelect = (event) => {
+        setSelectedKey(event.key)
+    }
     return (
         <>
             <Layout style={{
@@ -93,6 +105,8 @@ const LayoutAdmin = () => {
                         mode="inline"
                         defaultSelectedKeys={['1']}
                         items={items}
+                        onSelect={(event) => { handleSelect(event) }}
+                        selectedKeys={selectedKey}
                     />
                 </Sider >
                 <Layout>

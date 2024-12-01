@@ -30,10 +30,13 @@ import ManageOrder from './pages/admin/order/manage.order';
 
 
 const Layout = () => {
+
+  const [search, setSearch] = useState('')
+
   return (
     <div className='layout-app' style={{ height: "100%" }}>
-      <Header />
-      <Outlet />
+      <Header search={search} setSearch={setSearch} />
+      <Outlet context={[search, setSearch]} />
       <Footer />
     </div>
   )
