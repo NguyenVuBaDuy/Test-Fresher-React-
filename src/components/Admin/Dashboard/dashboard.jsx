@@ -12,7 +12,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         loadDashboard()
-    }, [dataDashboard])
+    }, [])
 
     const loadDashboard = async () => {
         const res = await getDashboard()
