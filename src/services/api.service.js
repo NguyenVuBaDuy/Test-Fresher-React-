@@ -154,6 +154,11 @@ const fetchOrderAPI = (current, pageSize, sortQuery) => {
     return axios.get(URL_BACKEND)
 }
 
+const getDashboard = () => {
+    const URL_BACKEND = '/api/v1/database/dashboard'
+    return axios.get(URL_BACKEND)
+}
+
 export {
     registerAPI,
     loginAPI,
@@ -176,5 +181,6 @@ export {
     uploadAvatarAPI,
     changeInfoAPI,
     changePasswordAPI,
-    fetchOrderAPI
+    fetchOrderAPI,
+    getDashboard
 } 
